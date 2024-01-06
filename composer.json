@@ -1,0 +1,19 @@
+{
+    "name": "reactphp-framework/websocket-middleware",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Reactphp\\Framework\\WebsocketMiddleware\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wpjscc",
+            "email": "wpjscc@gmail.com"
+        }
+    ],
+    "require": {
+        "ratchet/rfc6455": "^0.3.1",
+        "react/http": "^1.9"
+    }
+}
