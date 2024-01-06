@@ -36,7 +36,9 @@ class WebsocketMiddleware
         $response = $negotiator->handshake($request);
 
         if ($response->getStatusCode() !== 101) {
-            return $response;
+            return Response::html(
+                "<center><h1>Http Request</h1></center><hr><center>reactphp-framework/websocket-middleware 1.0.0</center>",
+            );
         }
 
         if (!$this->webSocketOptions->isPermessageDeflateEnabled()) {
@@ -55,13 +57,29 @@ class WebsocketMiddleware
 
         $inStream  = new ThroughStream();
         $outStream = new ThroughStream();
-        $stream = new CompositeStream($outStream, $inStream);
+        $mb = null;
+        $transformStream = new ThroughStream(function ($data) use (&$mb) {
+
+            if ($data instanceof Frame) {
+                $mb->sendFrame($data);
+            } 
+            else if ($data instanceof MessageInterface) {
+                $mb->sendMessage($data->getPayload(), true, $data->isBinary());
+            } 
+            else {
+                $mb->sendMessage($data);
+            }
+        });
+        $stream = new CompositeStream($inStream, $transformStream);
         $connection = new Connection($stream);
 
         $response = new Response(
             $response->getStatusCode(),
             $response->getHeaders(),
-            $stream
+            new CompositeStream(
+                $outStream,
+                $inStream
+            )
         );
 
         $mb = new MessageBuffer(
@@ -91,7 +109,7 @@ class WebsocketMiddleware
             null,
             $this->webSocketOptions->getMaxMessagePayloadSize(),
             $this->webSocketOptions->getMaxFramePayloadSize(),
-            [$stream, 'write'],
+            [$outStream, 'write'],
             $permessageDeflateOptions[0]
         );
 
