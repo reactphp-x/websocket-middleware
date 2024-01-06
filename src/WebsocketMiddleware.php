@@ -13,6 +13,7 @@ use Ratchet\RFC6455\Messaging\CloseFrameChecker;
 use Ratchet\RFC6455\Messaging\Frame;
 use Ratchet\RFC6455\Messaging\Message;
 use Ratchet\RFC6455\Messaging\MessageBuffer;
+use React\Stream\Util;
 
 class WebsocketMiddleware
 {
@@ -54,25 +55,22 @@ class WebsocketMiddleware
             }
         }
 
-
-        $inStream  = new ThroughStream();
-        $outStream = new ThroughStream();
         $mb = null;
-        $transformStream = new ThroughStream(function ($data) use (&$mb) {
-
+        $middleInStream  = new ThroughStream();
+        $middleOutStream = new ThroughStream(function ($data) use (&$mb) {
             if ($data instanceof Frame) {
                 $mb->sendFrame($data);
-            } 
-            else if ($data instanceof MessageInterface) {
+            } else if ($data instanceof MessageInterface) {
                 $mb->sendMessage($data->getPayload(), true, $data->isBinary());
-            } 
-            else {
+            } else {
                 $mb->sendMessage($data);
             }
         });
-        $stream = new CompositeStream($inStream, $transformStream);
-        $connection = new Connection($stream);
+        $middleStream = new CompositeStream($middleInStream, $middleOutStream);
+        $connection = new Connection($middleStream);
 
+        $inStream  = new ThroughStream();
+        $outStream = new ThroughStream();
         $response = new Response(
             $response->getStatusCode(),
             $response->getHeaders(),
@@ -85,13 +83,15 @@ class WebsocketMiddleware
         $mb = new MessageBuffer(
             new CloseFrameChecker(),
             function (Message $message) use ($connection) {
+                // 为了$middleStream 触发读事件
+                $connection->getStream()->emit('data', [$message->getPayload()]);
                 $this->component->onMessage($connection, $message->getPayload());
             },
             function (Frame $frame) use ($connection) {
                 switch ($frame->getOpcode()) {
                     case Frame::OP_PING:
-                        return;
-                    case Frame::OP_PONG:;
+                        break;
+                    case Frame::OP_PONG:
                         break;
                     case Frame::OP_CLOSE:
                         $closeCode = unpack('n*', substr($frame->getPayload(), 0, 2));
@@ -113,13 +113,19 @@ class WebsocketMiddleware
             $permessageDeflateOptions[0]
         );
 
-        $stream->on('data', [$mb, 'onData']);
+        $inStream->on('data', [$mb, 'onData']);
 
         $this->component->onOpen($connection, $request);
 
         $response->getBody()->input->once('pipe', function ($con) use ($connection) {
+            Util::forwardEvents($connection->getStream(), $con, ['error', 'close']);
             $con->on('error', function ($e) use ($connection) {
+                $connection->getStream()->emit('error', [$e]);
                 $this->component->onError($connection, $e);
+            });
+            $con->on('close', function () use ($connection) {
+                $connection->getStream()->close();
+                $this->component->onClose($connection);
             });
         });
 
