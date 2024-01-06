@@ -1,4 +1,4 @@
-# reactphp-framework-webbsocket-middleware
+# reactphp-framework-websocket-middleware
 
 ## install
 
