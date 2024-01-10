@@ -115,9 +115,9 @@ class WebsocketMiddleware
 
         $inStream->on('data', [$mb, 'onData']);
 
-        $this->component->onOpen($connection, $request);
+        $response->getBody()->input->once('pipe', function ($con) use ($connection, $request) {
+            $this->component->onOpen($connection, $request);
 
-        $response->getBody()->input->once('pipe', function ($con) use ($connection) {
             Util::forwardEvents($connection->getStream(), $con, ['error', 'close']);
             $con->on('error', function ($e) use ($connection) {
                 $connection->getStream()->emit('error', [$e]);
