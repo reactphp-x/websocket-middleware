@@ -14,6 +14,7 @@ use Ratchet\RFC6455\Messaging\Frame;
 use Ratchet\RFC6455\Messaging\Message;
 use Ratchet\RFC6455\Messaging\MessageBuffer;
 use React\Stream\Util;
+use React\EventLoop\Loop;
 
 class WebsocketMiddleware
 {
@@ -115,15 +116,18 @@ class WebsocketMiddleware
 
         $inStream->on('data', [$mb, 'onData']);
 
-        $response->getBody()->input->once('pipe', function ($con) use ($connection, $request) {
+        Loop::futureTick(function () use ($connection, $request) {
             $this->component->onOpen($connection, $request);
+        });
+
+        $response->getBody()->input->once('pipe', function ($con) use ($connection, $request) {
 
             Util::forwardEvents($connection->getStream(), $con, ['error', 'close']);
             $con->on('error', function ($e) use ($connection) {
                 $connection->getStream()->emit('error', [$e]);
                 $this->component->onError($connection, $e);
             });
-            $con->on('close', function () use ($connection) {
+            $con->on('close', function () use ($connection, $con) {
                 $connection->getStream()->close();
                 $this->component->onClose($connection);
             });
