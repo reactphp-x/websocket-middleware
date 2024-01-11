@@ -120,13 +120,21 @@ class WebsocketMiddleware
             $this->component->onOpen($connection, $request);
         });
 
-        $response->getBody()->input->once('pipe', function ($con) use ($connection, $request) {
+        $response->getBody()->input->once('pipe', function ($con) use ($connection) {
 
-            Util::forwardEvents($connection->getStream(), $con, ['error', 'close']);
+            $connection->getStream()->on('error', function ($e) use ($con) {
+                $con->emit('error', [$e]);
+            });
+
+            $connection->getStream()->on('close', function () use ($con) {
+                $con->close();
+            });
+
             $con->on('error', function ($e) use ($connection) {
                 $connection->getStream()->emit('error', [$e]);
                 $this->component->onError($connection, $e);
             });
+            
             $con->on('close', function () use ($connection, $con) {
                 $connection->getStream()->close();
                 $this->component->onClose($connection);
