@@ -102,7 +102,7 @@ class WebsocketMiddleware
                         if ($frame->getPayloadLength() > 2) {
                             $reason = substr($frame->getPayload(), 2);
                         }
-                        $this->component->onClose($connection, $reason);
+                        // $this->component->onClose($connection, $reason);
                         break;
                 }
             },
@@ -137,7 +137,7 @@ class WebsocketMiddleware
             
             $con->on('close', function () use ($connection, $con) {
                 $connection->getStream()->close();
-                // $this->component->onClose($connection);
+                $this->component->onClose($connection);
             });
         });
 
