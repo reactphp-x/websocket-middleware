@@ -137,7 +137,7 @@ class WebsocketMiddleware
             
             $con->on('close', function () use ($connection, $con) {
                 $connection->getStream()->close();
-                $this->component->onClose($connection);
+                // $this->component->onClose($connection);
             });
         });
 
