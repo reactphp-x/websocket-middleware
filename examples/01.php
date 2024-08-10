@@ -2,10 +2,10 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Reactphp\Framework\WebsocketMiddleware\WebsocketMiddleware;
+use ReactphpX\WebsocketMiddleware\WebsocketMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
-use Reactphp\Framework\WebsocketMiddleware\ConnectionInterface;
-use Reactphp\Framework\WebsocketMiddleware\MessageComponentInterface;
+use ReactphpX\WebsocketMiddleware\ConnectionInterface;
+use ReactphpX\WebsocketMiddleware\MessageComponentInterface;
 
 /**
  * chat.php

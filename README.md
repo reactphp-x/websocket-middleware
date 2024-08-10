@@ -1,9 +1,9 @@
-# reactphp-framework-websocket-middleware
+# reactphp-x-websocket-middleware
 
 ## install
 
 ```
-composer require reactphp-framework/websocket-middleware -vvv
+composer require reactphp-x/websocket-middleware -vvv
 ```
 
 ## Usage
@@ -13,10 +13,10 @@ composer require reactphp-framework/websocket-middleware -vvv
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Reactphp\Framework\WebsocketMiddleware\WebsocketMiddleware;
+use ReactphpX\WebsocketMiddleware\WebsocketMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
-use Reactphp\Framework\WebsocketMiddleware\ConnectionInterface;
-use Reactphp\Framework\WebsocketMiddleware\MessageComponentInterface;
+use ReactphpX\WebsocketMiddleware\ConnectionInterface;
+use ReactphpX\WebsocketMiddleware\MessageComponentInterface;
 
 /**
  * chat.php
@@ -60,8 +60,8 @@ $http->listen($socket);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Reactphp\Framework\WebsocketMiddleware\WebsocketMiddleware;
-use Reactphp\Framework\WebsocketMiddleware\EchoServer;
+use ReactphpX\WebsocketMiddleware\WebsocketMiddleware;
+use ReactphpX\WebsocketMiddleware\EchoServer;
 $http = new React\Http\HttpServer(new WebsocketMiddleware(new EchoServer()));
 $socket = new React\Socket\SocketServer('0.0.0.0:8090');
 $http->listen($socket);
@@ -73,8 +73,8 @@ require [clue/framework-x](https://github.com/clue/framework-x/)
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Reactphp\Framework\WebsocketMiddleware\WebsocketMiddleware;
-use Reactphp\Framework\WebsocketMiddleware\EchoServer;
+use ReactphpX\WebsocketMiddleware\WebsocketMiddleware;
+use ReactphpX\WebsocketMiddleware\EchoServer;
 
 putenv("X_LISTEN=0.0.0.0:8090");
 

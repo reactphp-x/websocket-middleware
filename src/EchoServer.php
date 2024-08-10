@@ -1,10 +1,10 @@
 <?php
 
-namespace Reactphp\Framework\WebsocketMiddleware;
+namespace ReactphpX\WebsocketMiddleware;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Reactphp\Framework\WebsocketMiddleware\ConnectionInterface;
-use Reactphp\Framework\WebsocketMiddleware\MessageComponentInterface;
+use ReactphpX\WebsocketMiddleware\ConnectionInterface;
+use ReactphpX\WebsocketMiddleware\MessageComponentInterface;
 
 class EchoServer implements MessageComponentInterface
 {

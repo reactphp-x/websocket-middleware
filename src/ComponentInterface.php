@@ -1,6 +1,6 @@
 <?php
 
-namespace Reactphp\Framework\WebsocketMiddleware;
+namespace ReactphpX\WebsocketMiddleware;
 
 use Psr\Http\Message\ServerRequestInterface;
 

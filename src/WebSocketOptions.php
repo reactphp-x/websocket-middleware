@@ -1,6 +1,6 @@
 <?php
 
-namespace Reactphp\Framework\WebsocketMiddleware;
+namespace ReactphpX\WebsocketMiddleware;
 
 class WebSocketOptions
 {

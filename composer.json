@@ -1,9 +1,9 @@
 {
-    "name": "reactphp-framework/websocket-middleware",
+    "name": "reactphp-x/websocket-middleware",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Reactphp\\Framework\\WebsocketMiddleware\\": "src/"
+            "ReactphpX\\WebsocketMiddleware\\": "src/"
         }
     },
     "authors": [

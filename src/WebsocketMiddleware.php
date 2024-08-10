@@ -1,6 +1,6 @@
 <?php
 
-namespace Reactphp\Framework\WebsocketMiddleware;
+namespace ReactphpX\WebsocketMiddleware;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Ratchet\RFC6455\Handshake\PermessageDeflateOptions;
@@ -39,7 +39,7 @@ class WebsocketMiddleware
 
         if ($response->getStatusCode() !== 101) {
             return Response::html(
-                "<center><h1>Http Request</h1></center><hr><center>reactphp-framework/websocket-middleware 1.0.0</center>",
+                "<center><h1>Http Request</h1></center><hr><center>reactphp-x/websocket-middleware 1.0.0</center>",
             );
         }
 

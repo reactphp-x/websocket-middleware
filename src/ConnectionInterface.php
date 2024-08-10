@@ -1,14 +1,14 @@
 <?php
 
-namespace Reactphp\Framework\WebsocketMiddleware;
+namespace ReactphpX\WebsocketMiddleware;
 
 use React\Stream\DuplexStreamInterface;
 
 /**
- * The version of Reactphp\Framework being used
+ * The version of ReactphpX being used
  * @var string
  */
-const VERSION = 'Reactphp\Framework/1.0.0';
+const VERSION = 'ReactphpX/1.0.0';
 
 /**
  * A proxy object representing a connection to the application
@@ -19,7 +19,7 @@ interface ConnectionInterface
     /**
      * Send data to the connection
      * @param  string $data
-     * @return \Reactphp\Framework\WebsocketMiddleware\ConnectionInterface
+     * @return \ReactphpX\WebsocketMiddleware\ConnectionInterface
      */
     function send($data);
 

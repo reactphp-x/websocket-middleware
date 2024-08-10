@@ -1,6 +1,6 @@
 <?php
 
-namespace Reactphp\Framework\WebsocketMiddleware;
+namespace ReactphpX\WebsocketMiddleware;
 
 interface MessageComponentInterface extends ComponentInterface, MessageInterface {
 }

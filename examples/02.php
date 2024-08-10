@@ -2,8 +2,8 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Reactphp\Framework\WebsocketMiddleware\WebsocketMiddleware;
-use Reactphp\Framework\WebsocketMiddleware\EchoServer;
+use ReactphpX\WebsocketMiddleware\WebsocketMiddleware;
+use ReactphpX\WebsocketMiddleware\EchoServer;
 
 putenv("X_LISTEN=0.0.0.0:8090");
 
