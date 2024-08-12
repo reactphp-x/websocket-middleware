@@ -91,6 +91,7 @@ class WebsocketMiddleware
             function (Frame $frame) use ($connection) {
                 switch ($frame->getOpcode()) {
                     case Frame::OP_PING:
+                        $connection->send(new Frame($frame->getPayload(), true, Frame::OP_PONG));
                         break;
                     case Frame::OP_PONG:
                         break;
@@ -102,7 +103,8 @@ class WebsocketMiddleware
                         if ($frame->getPayloadLength() > 2) {
                             $reason = substr($frame->getPayload(), 2);
                         }
-                        // $this->component->onClose($connection, $reason);
+
+                        $connection->close($frame);
                         break;
                 }
             },

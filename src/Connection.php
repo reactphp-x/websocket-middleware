@@ -3,6 +3,8 @@
 namespace ReactphpX\WebsocketMiddleware;
 
 use React\Stream\DuplexStreamInterface;
+use Ratchet\RFC6455\Messaging\DataInterface;
+use Ratchet\RFC6455\Messaging\Frame;
 
 /**
  * Wraps ConnectionInterface objects via the decorator pattern but allows
@@ -26,8 +28,18 @@ use React\Stream\DuplexStreamInterface;
         return $this;
     }
 
-    public function close() 
+    public function close($code = 1000) 
     {
+        if (!$this->conn->isWritable()) {
+            return ;
+        }
+
+        if ($code instanceof DataInterface) {
+            $this->send($code);
+        } else {
+            $this->send(new Frame(pack('n', $code), true, Frame::OP_CLOSE));
+        }
+
         return $this->conn->end();
     }
 
