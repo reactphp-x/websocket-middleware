@@ -22,7 +22,7 @@ class WebsocketMiddleware
     private $subProtocols;
     private $webSocketOptions = null;
 
-    public function __construct(MessageComponentInterface $component, array $subProtocols = [], WebSocketOptions $options = null)
+    public function __construct(MessageComponentInterface $component, array $subProtocols = [], ?WebSocketOptions $options = null)
     {
         $this->component = $component;
         $this->subProtocols = $subProtocols;
