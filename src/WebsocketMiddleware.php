@@ -124,20 +124,20 @@ class WebsocketMiddleware
 
         $response->getBody()->input->once('pipe', function ($con) use ($connection) {
 
-            $connection->getStream()->on('error', function ($e) use ($con) {
+            $connection->getStream()->once('error', function ($e) use ($con) {
                 $con->emit('error', [$e]);
             });
 
-            $connection->getStream()->on('close', function () use ($con) {
+            $connection->getStream()->once('close', function () use ($con) {
                 $con->close();
             });
 
-            $con->on('error', function ($e) use ($connection) {
+            $con->once('error', function ($e) use ($connection) {
                 $connection->getStream()->emit('error', [$e]);
                 $this->component->onError($connection, $e);
             });
             
-            $con->on('close', function () use ($connection, $con) {
+            $con->once('close', function () use ($connection, $con) {
                 $connection->getStream()->close();
                 $this->component->onClose($connection);
             });
